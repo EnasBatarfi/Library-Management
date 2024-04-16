@@ -1,4 +1,4 @@
-public class User : Entity
+public class User : LibraryEntity
 {
     public User(string name, DateTime? createdDate = default) : base(createdDate)
     {

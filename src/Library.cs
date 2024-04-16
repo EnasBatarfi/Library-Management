@@ -37,16 +37,8 @@ public class Library
             throw new ArgumentException("The book object cannot be null");
         }
 
-        if (!Books.Exists((book) => book.Title == newBook.Title))
-        {
-            Books.Add(newBook);
-            Console.WriteLine("Book added successfully!");
-        }
-        else
-        {
-            throw new ArgumentException("A book with the same title already exists");
-        }
-
+        Books.Add(newBook);
+        Console.WriteLine("Book added successfully!");
     }
 
     public void AddUser(User newUser)
@@ -57,15 +49,7 @@ public class Library
             throw new ArgumentException("The user object cannot be null");
         }
 
-        if (!Users.Exists((user) => user.Name == newUser.Name))
-        {
-            Users.Add(newUser);
-            Console.WriteLine("User added successfully!");
-        }
-        else
-        {
-            throw new ArgumentException("A User with the same name already exists");
-        }
-
+        Users.Add(newUser);
+        Console.WriteLine("User added successfully!");
     }
 }

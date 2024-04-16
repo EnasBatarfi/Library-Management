@@ -1,6 +1,6 @@
-public class Entity
+public class LibraryEntity
 {
-    public Entity(DateTime? createdDate = default)
+    public LibraryEntity(DateTime? createdDate = default)
     {
         Id = Guid.NewGuid().ToString();
         CreatedDate = createdDate ?? DateTime.Now;

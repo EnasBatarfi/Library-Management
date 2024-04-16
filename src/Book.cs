@@ -1,4 +1,4 @@
-public class Book : Entity
+public class Book : LibraryEntity
 {
     public Book(string title, DateTime? createdDate = default) : base(createdDate)
     {
