@@ -1,22 +1,10 @@
-public class User
+public class User : Entity
 {
-    public User(string id, string name, DateTime createdDate)
+    public User(string name, DateTime? createdDate = default) : base(createdDate)
     {
-        Id = id;
         Name = name;
-        CreatedDate = createdDate;
-    }
-    public string Id
-    {
-        set;
-        get;
     }
     public string Name
-    {
-        set;
-        get;
-    }
-    public DateTime CreatedDate
     {
         set;
         get;

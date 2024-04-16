@@ -1,26 +1,14 @@
-using System.Dynamic;
-
-public class Book
+public class Book : Entity
 {
-    public Book(string id, string title, DateTime createdDate)
+    public Book(string title, DateTime? createdDate = default) : base(createdDate)
     {
-        Id = id;
         Title = title;
-        CreatedDate = createdDate;
     }
-    public string Id
-    {
-        set;
-        get;
-    }
+
     public string Title
     {
         set;
         get;
     }
-    public DateTime CreatedDate
-    {
-        set;
-        get;
-    }
+
 }
