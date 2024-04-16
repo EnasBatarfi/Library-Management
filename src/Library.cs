@@ -17,16 +17,18 @@ public class Library
         private set;
     }
 
-    public Book FindBookByTitle(string title)
+    public List<Book> FindBookByTitle(string title)
     {
-        var foundedBook = Books.FirstOrDefault((book) => book.Title == title);
-        return foundedBook ?? throw new ArgumentException("Book Not Found");
+        var foundedBooks = Books.FindAll((book) => book.Title.Contains(title));
+        // return foundedBooks.Count == 0 ? throw new ArgumentException("Books Not Found") : foundedBooks;
+        return foundedBooks;
     }
 
-    public User FindUserByName(string name)
+    public List<User> FindUserByName(string name)
     {
-        var foundedUser = Users.FirstOrDefault((user) => user.Name == name);
-        return foundedUser ?? throw new ArgumentException("User Not Found");
+        var foundedUsers = Users.FindAll((user) => user.Name.Contains(name));
+        // return foundedUsers ?? throw new ArgumentException("User Not Found");
+        return foundedUsers;
     }
 
     public void AddBook(Book newBook)
@@ -51,5 +53,45 @@ public class Library
 
         Users.Add(newUser);
         Console.WriteLine("User added successfully!");
+    }
+
+    public void DeleteBook(string id)
+    {
+        var bookToBeDeleted = Books.Find((book) => book.Id == id);
+
+        if (bookToBeDeleted != null)
+        {
+            Books.Remove(bookToBeDeleted);
+            Console.WriteLine("Book deleted successfully!");
+        }
+        else
+        {
+            throw new ArgumentException("Book Not Found");
+        }
+
+    }
+    public void DeleteUser(string id)
+    {
+        var userToBeDeleted = Users.Find((user) => user.Id == id);
+
+        if (userToBeDeleted != null)
+        {
+            Users.Remove(userToBeDeleted);
+            Console.WriteLine("User deleted successfully!");
+        }
+        else
+        {
+            throw new ArgumentException("User Not Found");
+        }
+
+    }
+
+    public List<Book> GetAllBooks(int pageNo, int limitPerPage)
+    {
+        return Books.Skip((pageNo - 1) * limitPerPage).Take(limitPerPage).OrderBy(book => book.CreatedDate).ToList();
+    }
+    public List<User> GetAllUsers(int pageNo, int limitPerPage)
+    {
+        return Users.Skip((pageNo - 1) * limitPerPage).Take(limitPerPage).OrderBy(user => user.CreatedDate).ToList();
     }
 }
