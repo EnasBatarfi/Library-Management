@@ -8,8 +8,14 @@ public class LibraryManagementApp
         Console.WriteLine("╔═══════════════════════════════════════════════════════════════════════╗");
         Console.WriteLine("║                Welcome to the Library Management System!              ║");
         Console.WriteLine("╚═══════════════════════════════════════════════════════════════════════╝");
-
-        Library library = new Library();
+        Console.Write("\n\nHow would you like to receive notifications?\n1. SMS message\n2. Email message\nEnter '1' for SMS or '2' for Email: ");
+        int notificationsChoice;
+        while (!int.TryParse(Console.ReadLine(), out notificationsChoice) || notificationsChoice < 1 || notificationsChoice > 2)
+        {
+            Console.Write("\nInvalid input. Please enter '1' for SMS or '2' for Email: ");
+        }
+        INotificationService notificationService = notificationsChoice == 1 ? new SMSNotificationService() : new EmailNotificationService();
+        Library library = new Library(notificationService);
 
         while (true)
         {
@@ -271,7 +277,7 @@ public class LibraryManagementApp
                     Console.Write("Invalid input. The number of copies must be a positive integer: ");
                 }
                 library.UpdateCopiesNo(book.Title, newCopies);
-                Console.WriteLine("\nUpdated Book:");
+                Console.WriteLine("\nUpdated Book: ");
                 DisplayLibraryEntities(new List<LibraryEntity> { book });
 
             }

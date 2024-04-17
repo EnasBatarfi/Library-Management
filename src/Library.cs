@@ -1,7 +1,9 @@
 public class Library
 {
-    public Library()
+    INotificationService notificationService;
+    public Library(INotificationService notificationService)
     {
+        this.notificationService = notificationService;
         Books = new List<Book>();
         Users = new List<User>();
     }
@@ -34,17 +36,20 @@ public class Library
 
         if (newBook == null)
         {
+            notificationService.SendNotificationOnFailure("Failed to add book. The book object cannot be null");
             throw new ArgumentException("The book object cannot be null");
         }
 
         if (!Books.Exists((book) => book.Title == newBook.Title))
         {
             Books.Add(newBook);
-            Console.WriteLine("Book added successfully!");
+            notificationService.SendNotificationOnSuccess($"Book '{newBook.Title}' added to Library");
         }
         else
         {
+            notificationService.SendNotificationOnFailure($"Failed to add book '{newBook.Title}'. A book with the same title already exists");
             throw new ArgumentException("A book with the same title already exists");
+
         }
     }
 
@@ -53,11 +58,13 @@ public class Library
 
         if (newUser == null)
         {
+            notificationService.SendNotificationOnFailure("Failed to add user. The user object cannot be null");
             throw new ArgumentException("The user object cannot be null");
         }
 
         Users.Add(newUser);
-        Console.WriteLine("User added successfully!");
+        Users.Add(newUser);
+        notificationService.SendNotificationOnSuccess($"User '{newUser.Name}' added to Library");
     }
 
     public void DeleteBook(string id)
@@ -66,29 +73,32 @@ public class Library
 
         if (bookToBeDeleted != null)
         {
+            string deletedBookName = bookToBeDeleted.Title;
             Books.Remove(bookToBeDeleted);
-            Console.WriteLine("Book deleted successfully!");
+            notificationService.SendNotificationOnSuccess($"Book '{deletedBookName}' deleted successfully!");
         }
         else
         {
+            notificationService.SendNotificationOnFailure("Failed to delete book. Book not found.");
             throw new ArgumentException("Book Not Found");
         }
-
     }
+
     public void DeleteUser(string id)
     {
         var userToBeDeleted = Users.Find((user) => user.Id == id);
 
         if (userToBeDeleted != null)
         {
+            string deletedUserName = userToBeDeleted.Name;
             Users.Remove(userToBeDeleted);
-            Console.WriteLine("User deleted successfully!");
+            notificationService.SendNotificationOnSuccess($"User '{deletedUserName}' deleted successfully!");
         }
         else
         {
+            notificationService.SendNotificationOnFailure("Failed to delete user. User not found.");
             throw new ArgumentException("User Not Found");
         }
-
     }
 
     public List<Book> GetAllBooks(int pageNo, int limitPerPage)
