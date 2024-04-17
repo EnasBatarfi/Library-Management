@@ -1,4 +1,5 @@
-﻿using System;
+﻿namespace LibraryManagement;
+using System;
 
 public class LibraryManagementApp
 {
@@ -25,13 +26,14 @@ public class LibraryManagementApp
                 Console.WriteLine("7. Find User by Name");
                 Console.WriteLine("8. Display All Books");
                 Console.WriteLine("9. Display All Users");
-                Console.WriteLine("10. Exit");
-                Console.Write("\nEnter your choice (1-10): ");
+                Console.WriteLine("10. Update Copies Number");
+                Console.WriteLine("11. Exit");
+                Console.Write("\nEnter your choice (1-11): ");
                 int choice;
 
-                while (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > 10)
+                while (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > 11)
                 {
-                    Console.Write("\nInvalid input. Please enter a number between 1 and 10: ");
+                    Console.Write("\nInvalid input. Please enter a number between 1 and 11: ");
                 }
 
                 switch (choice)
@@ -64,6 +66,9 @@ public class LibraryManagementApp
                         DisplayUsers(library);
                         break;
                     case 10:
+                        UpdateCopiesNumber(library);
+                        break;
+                    case 11:
                         Console.WriteLine("\nThank you for using the Library Management System!");
                         return;
                 }
@@ -168,8 +173,27 @@ public class LibraryManagementApp
                 }
             }
         }
+        int copiesNo = 1;
+        Console.Write("Do you want to specify number of copies for the book? (Y/N): ");
+        string specifyCopiesNoInput = Console.ReadLine()?.Trim().ToUpper() ?? "";
+        if (specifyCopiesNoInput == "Y")
+        {
+            Console.Write("Enter Number of copies: ");
+            while (true)
+            {
+                string input = Console.ReadLine()?.Trim() ?? "";
+                if (!string.IsNullOrEmpty(input) && !int.TryParse(input, out copiesNo) && copiesNo > 0)
+                {
+                    Console.Write("Invalid input format. Please enter a positive integer: ");
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
 
-        library.AddBook(new Book(title, creationDate));
+        library.AddBook(new Book(title, creationDate, copiesNo));
     }
 
     private static void AddUser(Library library)
@@ -222,6 +246,39 @@ public class LibraryManagementApp
         var books = library.FindBookByTitle(title);
         DisplayLibraryEntities(books.Select(book => (LibraryEntity)book).ToList());
     }
+
+    private static void UpdateCopiesNumber(Library library)
+    {
+        Console.Write("\nEnter book title to update its copies number: ");
+        string title = Console.ReadLine()?.Trim() ?? "";
+
+        var book = library.FindBookByTitle(title).FirstOrDefault();
+
+        if (book != null)
+        {
+            Console.WriteLine("\nFounded Book:");
+            DisplayLibraryEntities(new List<LibraryEntity> { book });
+
+            Console.Write("\nDo you still want to update the copies number for the book? (Y/N): ");
+            string confirmation = Console.ReadLine()?.Trim().ToUpper() ?? "";
+
+            if (confirmation == "Y")
+            {
+                Console.Write("Enter the new number of copies: ");
+                int newCopies;
+                while (!(int.TryParse(Console.ReadLine(), out newCopies) && newCopies >= 0))
+                {
+                    Console.Write("Invalid input. The number of copies must be a positive integer: ");
+                }
+                library.UpdateCopiesNo(book.Title, newCopies);
+                Console.WriteLine("\nUpdated Book:");
+                DisplayLibraryEntities(new List<LibraryEntity> { book });
+
+            }
+        }
+
+    }
+
 
     private static void FindUser(Library library)
     {
@@ -276,37 +333,56 @@ public class LibraryManagementApp
     }
     public static void DisplayLibraryEntities(List<LibraryEntity> libraryEntities)
     {
-        Console.WriteLine("┌────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐");
-        Console.WriteLine("│                                                   Library Entities Table                                                   │");
-        Console.WriteLine("├────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤");
+        Console.WriteLine("┌─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐");
+        Console.WriteLine("│                                                           Library Entities Table                                                        │");
+        Console.WriteLine("├─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤");
 
         if (libraryEntities.Count > 0)
         {
-            Console.WriteLine("│ ID                                       │ Title/Name                                    │ Created Date                    │");
-            Console.WriteLine("├──────────────────────────────────────────┼───────────────────────────────────────────────┼─────────────────────────────────┤");
+            bool includeCopiesColumn = libraryEntities.Any(entity => entity is Book);
+            if (includeCopiesColumn)
+            {
+                Console.WriteLine("│ ID                                       │ Title                                         │ Copies     │ Created Date                    │");
+                Console.WriteLine("├──────────────────────────────────────────┼───────────────────────────────────────────────┼────────────┼─────────────────────────────────┤");
+            }
+            else
+            {
+                Console.WriteLine("│ ID                                          │ Name                                        │ Created Date                                │");
+                Console.WriteLine("├─────────────────────────────────────────────┼─────────────────────────────────────────────┼─────────────────────────────────────────────┤");
+            }
 
             foreach (var entity in libraryEntities)
             {
                 string id = entity.Id;
                 string titleOrName = "";
+                string copies = "";
+
                 if (entity is Book book)
                 {
                     titleOrName = book.Title;
+                    copies = book.Copies.ToString();
                 }
                 else if (entity is User user)
                 {
                     titleOrName = user.Name;
                 }
 
-                Console.WriteLine($"│ {id,-40} │ {titleOrName,-45} │ {entity.CreatedDate,-31} │");
+                if (includeCopiesColumn)
+                {
+                    Console.WriteLine($"│ {id,-40} │ {titleOrName,-45} │ {copies,-10} │ {entity.CreatedDate,-31} │");
+                }
+                else
+                {
+                    Console.WriteLine($"│ {id,-43} │ {titleOrName,-43} │ {entity.CreatedDate,-43} │");
+                }
             }
         }
         else
         {
-            Console.WriteLine("│                                                  No items in the library                                                   │");
+            Console.WriteLine("│                                                         No entities in the library                                                      │");
         }
 
-        Console.WriteLine("└────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘");
+        Console.WriteLine("└─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘");
     }
 
 }

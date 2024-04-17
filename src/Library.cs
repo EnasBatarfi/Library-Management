@@ -20,15 +20,13 @@ public class Library
     public List<Book> FindBookByTitle(string title)
     {
         var foundedBooks = Books.FindAll((book) => book.Title.Contains(title));
-        // return foundedBooks.Count == 0 ? throw new ArgumentException("Books Not Found") : foundedBooks;
-        return foundedBooks;
+        return foundedBooks.Count == 0 ? throw new ArgumentException("Books Not Found") : foundedBooks;
     }
 
     public List<User> FindUserByName(string name)
     {
         var foundedUsers = Users.FindAll((user) => user.Name.Contains(name));
-        // return foundedUsers ?? throw new ArgumentException("User Not Found");
-        return foundedUsers;
+        return foundedUsers.Count == 0 ? throw new ArgumentException("Books Not Found") : foundedUsers;
     }
 
     public void AddBook(Book newBook)
@@ -39,8 +37,15 @@ public class Library
             throw new ArgumentException("The book object cannot be null");
         }
 
-        Books.Add(newBook);
-        Console.WriteLine("Book added successfully!");
+        if (!Books.Exists((book) => book.Title == newBook.Title))
+        {
+            Books.Add(newBook);
+            Console.WriteLine("Book added successfully!");
+        }
+        else
+        {
+            throw new ArgumentException("A book with the same title already exists");
+        }
     }
 
     public void AddUser(User newUser)
@@ -93,5 +98,22 @@ public class Library
     public List<User> GetAllUsers(int pageNo, int limitPerPage)
     {
         return Users.Skip((pageNo - 1) * limitPerPage).Take(limitPerPage).OrderBy(user => user.CreatedDate).ToList();
+    }
+
+    public void UpdateCopiesNo(string title, int newCopiesNo)
+    {
+        var bookToBeUpdated = Books.Find((book) => book.Title == title);
+
+        if (bookToBeUpdated != null)
+        {
+            bookToBeUpdated.Copies = newCopiesNo;
+            Console.WriteLine("Book copies number updated successfully!");
+        }
+        else
+        {
+            throw new ArgumentException("Book Not Found");
+        }
+
+
     }
 }
