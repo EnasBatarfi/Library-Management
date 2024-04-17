@@ -19,16 +19,16 @@ public class Library
         private set;
     }
 
-    public List<Book> FindBookByTitle(string title)
+    public List<Book> FindBooksByTitle(string title)
     {
         var foundedBooks = Books.FindAll((book) => book.Title.Contains(title));
         return foundedBooks.Count == 0 ? throw new ArgumentException("Books Not Found") : foundedBooks;
     }
 
-    public List<User> FindUserByName(string name)
+    public List<User> FindUsersByName(string name)
     {
         var foundedUsers = Users.FindAll((user) => user.Name.Contains(name));
-        return foundedUsers.Count == 0 ? throw new ArgumentException("Books Not Found") : foundedUsers;
+        return foundedUsers.Count == 0 ? throw new ArgumentException("User Not Found") : foundedUsers;
     }
 
     public void AddBook(Book newBook)
