@@ -249,7 +249,7 @@ public class LibraryManagementApp
     {
         Console.Write("\nEnter book title to find: ");
         string title = Console.ReadLine() ?? "";
-        var books = library.FindBookByTitle(title);
+        var books = library.FindBooksByTitle(title);
         DisplayLibraryEntities(books.Select(book => (LibraryEntity)book).ToList());
     }
 
@@ -258,7 +258,7 @@ public class LibraryManagementApp
         Console.Write("\nEnter book title to update its copies number: ");
         string title = Console.ReadLine()?.Trim() ?? "";
 
-        var book = library.FindBookByTitle(title).FirstOrDefault();
+        var book = library.FindBooksByTitle(title).FirstOrDefault();
 
         if (book != null)
         {
@@ -290,7 +290,7 @@ public class LibraryManagementApp
     {
         Console.Write("\nEnter user name to find: ");
         string name = Console.ReadLine() ?? "";
-        var users = library.FindUserByName(name);
+        var users = library.FindUsersByName(name);
         DisplayLibraryEntities(users.Select(user => (LibraryEntity)user).ToList());
     }
 

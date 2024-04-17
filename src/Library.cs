@@ -34,11 +34,11 @@ public class Library
     public void AddBook(Book newBook)
     {
 
-        if (newBook == null)
-        {
-            notificationService.SendNotificationOnFailure("Failed to add book. The book object cannot be null");
-            throw new ArgumentException("The book object cannot be null");
-        }
+        // if (newBook == null)
+        // {
+        //     notificationService.SendNotificationOnFailure("Failed to add book. The book object cannot be null");
+        //     throw new ArgumentException("The book object cannot be null");
+        // }
 
         if (!Books.Exists((book) => book.Title == newBook.Title))
         {
@@ -56,11 +56,11 @@ public class Library
     public void AddUser(User newUser)
     {
 
-        if (newUser == null)
-        {
-            notificationService.SendNotificationOnFailure("Failed to add user. The user object cannot be null");
-            throw new ArgumentException("The user object cannot be null");
-        }
+        // if (newUser == null)
+        // {
+        //     notificationService.SendNotificationOnFailure("Failed to add user. The user object cannot be null");
+        //     throw new ArgumentException("The user object cannot be null");
+        // }
 
         Users.Add(newUser);
         Users.Add(newUser);
