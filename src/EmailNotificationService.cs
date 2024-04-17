@@ -7,7 +7,7 @@ public class EmailNotificationService : INotificationService
 
     public void SendNotificationOnFailure(string failureMsg)
     {
-        Console.WriteLine($"Email Message: Dear Library Team,\n\nWe regret to inform you that we encountered an issue while processing the following action: {failureMsg}.\n\nPlease review the input data and try again. If the problem persists, our team is here to help! Contact us directly at support@library.com.\n\nSincerely,\nThe Library Support Team\n\n");
+        Console.WriteLine($"Email Message: Dear Library Team,\n\nWe regret to inform you that we encountered an issue while processing the following action: {failureMsg}.\n\nPlease review the input data and try again. If the problem persists, our team is here to help! Visit our FAQ at library.com/faq or contact us directly at support@library.com.\n\nSincerely,\nThe Library Support Team\n\n");
 
     }
 
